@@ -13,7 +13,9 @@ node_modules/
 dist/
 
 # 知识库 / 大文件数据
-data/chroma/
+# data/chroma/   # 已取消排除：ask-my-resume 向量库仅 ~0.75MB，入库随仓库一起部署，
+#                # 这样 Streamlit Cloud 无需联网下载 bge-small-zh-v1.5（纯 rule 模式下走不到向量化）。
+#                # 如需重建，在侧边栏点「重建知识库」即可。
 
 # 日志与临时文件
 *.log

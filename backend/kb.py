@@ -137,23 +137,60 @@ def build() -> int:
 
 
 def search(query: str, n=4, min_sim: float = 0.0) -> list[dict]:
-    """向量检索：返回按 sim 降序的命中（sim = 1 - distance）。"""
-    if not get_collection().count():
+    """向量检索：返回按 sim 降序的命中（sim = 1 - distance）。
+
+    兼容策略：
+      - 优先使用本地向量化的 bge-small-zh-v1.5。
+      - 若模型下载/加载失败（典型 Streamlit Cloud 无 HF 网络的情况），退化做
+       「包含关键词的文档按命中条数粗排」兜底返回，避免整个问答功能挂掉。
+    """
+    col = get_collection()
+    if not col.count():
         return []
-    model = get_model()
-    q_emb = model.encode([query], normalize_embeddings=True).tolist()
-    res = get_collection().query(
-        query_embeddings=q_emb, n_results=n)
-    out = []
-    for doc, dist, meta in zip(
-            res["documents"][0], res["distances"][0], res["metadatas"][0]):
-        sim = 1 - dist
-        out.append({
-            "text": doc,
-            "sim": round(sim, 4),
-            "source": (meta or {}).get("source", ""),
-        })
-    return out
+
+    try:
+        model = get_model()
+        q_emb = model.encode([query], normalize_embeddings=True).tolist()
+        res = col.query(query_embeddings=q_emb, n_results=n)
+        out = []
+        for doc, dist, meta in zip(
+                res["documents"][0], res["distances"][0], res["metadatas"][0]):
+            sim = 1 - dist
+            if sim >= min_sim:
+                out.append({
+                    "text": doc,
+                    "sim": round(sim, 4),
+                    "source": (meta or {}).get("source", ""),
+                })
+        return out
+    except Exception:
+        # Fallback：把库里所有文档拿出来，按「查询词里单字/词组命中」做粗打分。
+        # 仅在向量检索链路完全不可用时走，避免因为模型下载不到就 0 结果导致全拒答。
+        all_docs = col.get(include=["documents", "metadatas"])
+        ids = all_docs.get("ids") or []
+        docs = all_docs.get("documents") or []
+        metas = all_docs.get("metadatas") or []
+        if not docs:
+            return []
+
+        # 把查询拆成 1-gram + 2-gram token
+        q = query.strip()
+        tokens = set(q) | {q[i:i + 2] for i in range(len(q) - 1)}
+        scored = []
+        for doc, meta in zip(docs, metas):
+            if not doc:
+                continue
+            hits = sum(1 for t in tokens if t and t in doc)
+            if hits <= 0:
+                continue
+            # 归一化成 0-1：命中 token 数 / (token 总数 + 1)，避免除以 0
+            sim = min(0.99, hits / (len(tokens) + 1))
+            scored.append((sim, doc, (meta or {}).get("source", "")))
+        scored.sort(key=lambda x: -x[0])
+        return [
+            {"text": d, "sim": round(s, 4), "source": src}
+            for s, d, src in scored[:n]
+        ]
 
 
 if __name__ == "__main__":

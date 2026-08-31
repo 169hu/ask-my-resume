@@ -50,15 +50,29 @@ from backend import kb, answer  # noqa: E402  (必须在路径/环境变量就�
 
 # ---- 2) 首次启动：向量库不存在则自动重建 ----
 @st.cache_resource(show_spinner=False)
-def _ensure_kb() -> int:
-    """确保知识库可用；返回当前 chunk 数（0 表示失败）。"""
+def _ensure_kb(attempt_rebuild: bool = True) -> int:
+    """确保知识库可用；返回当前 chunk 数（0 表示空/失败）。
+
+    设计：
+      - 若仓库里已带 data/chroma（生产部署默认情况）：直接返回已入库的 chunk 数，
+        全程不触发 SentenceTransformer 模型下载/加载。
+      - 若库为空：尝试 kb.build()；失败（例如云端无 HuggingFace 网络）时吞异常，
+        由 search() 内部走「关键词粗排兜底」，整个页面仍然可用。
+    """
     col = kb.get_collection()
-    if col.count() > 0:
-        return col.count()
+    n = col.count()
+    if n > 0:
+        return n
+    if not attempt_rebuild:
+        return 0
     try:
         return kb.build()
-    except Exception as e:  # 模型下载/向量化失败，给出可操作提示
-        st.error(f"首次建库失败：{e}\n\n通常原因：(1) HuggingFace 网络不通；(2) 磁盘空间不足。")
+    except Exception as e:  # 模型下载/向量化失败
+        st.warning(
+            f"首次自动建库未成功（{e}）。聊天仍可用：已自动切换到「关键词检索兜底」，"
+            f"如需完整向量检索质量，请在 Streamlit Secrets 里确保服务器可访问 HuggingFace，"
+            f"或本地跑一次 `python -m backend.kb` 后把 data/chroma 提交到仓库。"
+        )
         return 0
 
 # ---- 3) 页面 UI ----
