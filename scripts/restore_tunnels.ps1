@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 #  一键恢复公网隧道 + 自动更新 Demo 链接
 #  用法：.\restore_tunnels.ps1
 #  功能：
@@ -13,10 +13,25 @@
 
 $ErrorActionPreference = 'Stop'
 
-# ---------- 配置（按需修改） ----------
-$CPOLAR   = 'E:\PycharmProjects\tools\cpolar_exe\cpolar\cpolar.exe'
-$TOOLS    = 'E:\PycharmProjects\tools'
-$PROJECTS = 'E:\PycharmProjects\ask-my-resume\content\projects'
+# ---------- 路径自动探测（无需硬编码本机盘符） ----------
+$ROOT     = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
+$PROJECTS = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\content\projects'))
+$TOOLS    = Join-Path $ROOT 'tools'
+
+# 探测 cpolar.exe：优先 PATH，其次 tools 常见安装位置
+$CPOLAR = (Get-Command cpolar.exe -ErrorAction SilentlyContinue).Source
+if (-not $CPOLAR) {
+  $candidates = @(
+    (Join-Path $TOOLS 'cpolar_exe\cpolar\cpolar.exe'),
+    (Join-Path $TOOLS 'cpolar\cpolar.exe'),
+    (Join-Path $TOOLS 'cpolar\cpolar_win64\cpolar.exe')
+  )
+  $CPOLAR = $candidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+}
+if (-not $CPOLAR) {
+  Write-Host '错误：找不到 cpolar.exe。请把它加入 PATH，或放到 <项目根>\tools\cpolar_exe\cpolar\ 下。' -ForegroundColor Red
+  exit 1
+}
 
 # 服务清单：端口 -> (显示名, 对应项目 md 文件名)
 # 8001 是作品集本身，无 md，留空
