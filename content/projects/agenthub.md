@@ -5,7 +5,7 @@ order: 2
 tech: [Python, LangGraph, MCP, Neo4j, Streamlit, Guard]
 tag: 主打
 online_demo: true
-demo_url: https://d04797a.r10.cpolar.top
+demo_url: https://196c399f.r10.cpolar.top
 metrics:
   - label: 多 Agent 编排
     value: 4 Agent

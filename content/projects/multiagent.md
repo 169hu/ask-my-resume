@@ -5,7 +5,7 @@ order: 6
 tech: [Python, LangGraph, LangChain, DeepSeek, ThreadPool]
 tag: 主打
 online_demo: true
-demo_url: https://1ba43b5.r10.cpolar.top
+demo_url: https://2badf179.r10.cpolar.top
 metrics:
   - label: Agent 角色
     value: 9 个
