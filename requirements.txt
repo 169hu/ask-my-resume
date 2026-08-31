@@ -1,9 +1,9 @@
-# 核心 UI
+# 说明：chromadb 跨版本不保证向后兼容 data/chroma/*.bin 的索引格式，
+#       所以必须钉死与本地建库时相同的版本（本地 chromadb 1.5.9 / sentence-transformers 6.0.0）。
+
+# 核心 UI（streamlit 相对宽松，1.36 之后的版本 API 稳定）
 streamlit>=1.36,<2
 
 # 向量库 & 向量化
-chromadb>=0.5.0,<1
-sentence-transformers>=3.0.0,<4
-
-# urllib3 / requests（Python 自带 urllib.request，这里补 requests 以防 sentence-transformers 依赖版本漂移）
-# （留空即可，sentence-transformers 会自行带上）
+chromadb==1.5.9
+sentence-transformers==6.0.0
