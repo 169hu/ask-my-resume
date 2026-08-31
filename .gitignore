@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 环境变量与密钥
+.env
+*.local
+
+# 前端
+node_modules/
+dist/
+
+# 知识库 / 大文件数据
+data/chroma/
+
+# 日志与临时文件
+*.log
+.DS_Store
+Thumbs.db
