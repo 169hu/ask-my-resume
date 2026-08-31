@@ -139,13 +139,75 @@ def build() -> int:
     return len(chunks)
 
 
+# 关键词兜底检索时忽略的停用字：问句虚词/口语词，避免稀释相似度。
+_FALLBACK_STOP_CHARS = set(
+    "的呢了吗啊呀哦嗯吧么则于与或及并同对为把被让在向从到"
+    "你我这他那它们那些哪些什么怎么如何为啥干嘛请帮我介绍一下说说"
+    "做做过有过是不是有没有不会能否可以给来去再也就只还真是吗啊"
+)
+
+
+def _fallback_tokens(query: str) -> list[str]:
+    """把查询拆成「有效 token」：英文/数字整体保留，中文逐字但剔除停用字，
+    并在连续有效中文字符上补 2-gram，供关键词兜底打分使用。"""
+    import re as _re
+    tokens: list[str] = []
+    for m in _re.finditer(r"[A-Za-z0-9_][A-Za-z0-9_.\-]*|[\u4e00-\u9fff]", query):
+        tok = m.group(0)
+        if tok[0].isascii():
+            tokens.append(tok.lower())
+        elif tok not in _FALLBACK_STOP_CHARS:
+            tokens.append(tok)
+    # 连续有效中文补 2-gram
+    chars = [t for t in tokens if not t[0].isascii()]
+    for i in range(len(chars) - 1):
+        tokens.append(chars[i] + chars[i + 1])
+    return tokens
+
+
+def _keyword_fallback(query: str, docs: list, metas: list, n=4) -> list[dict]:
+    """关键词兜底：只在向量检索完全不可用时走，避免模型下载失败导致全拒答。
+
+    打分思路：英文/数字整体算一个 token，中文剔除停用字后逐字 + 2-gram。
+    权重：2-gram 记 2 分、单字/英文按长度记分，sim = 命中权重 / 总权重。
+    这样「你做过哪些项目？」里的「项目」不会被「你、做、过、哪些、？」稀释，
+    相关文档能打到 0.5+，而无关问题（如问私人婚礼）大多 0 命中 → 保持拒答。
+    """
+    q = (query or "").strip()
+    tokens = [t for t in _fallback_tokens(q) if t]
+    if not tokens:
+        return []
+
+    def _weight(t: str) -> float:
+        if len(t) >= 2 and not t[0].isascii():
+            return 2.0          # 中文 2-gram：语义最强
+        return float(len(t))    # 中文单字 / 英文整体：按长度
+
+    total_w = sum(_weight(t) for t in tokens)
+
+    scored = []
+    for doc, meta in zip(docs, metas):
+        if not doc:
+            continue
+        doc_text = doc.lower()
+        hit_w = sum(w for t, w in ((t, _weight(t)) for t in tokens) if t in doc_text)
+        if hit_w <= 0:
+            continue
+        scored.append((hit_w / total_w, doc, (meta or {}).get("source", "")))
+    scored.sort(key=lambda x: -x[0])
+    return [
+        {"text": d, "sim": round(s, 4), "source": src}
+        for s, d, src in scored[:n]
+    ]
+
+
 def search(query: str, n=4, min_sim: float = 0.0) -> list[dict]:
     """向量检索：返回按 sim 降序的命中（sim = 1 - distance）。
 
     兼容策略：
       - 优先使用本地向量化的 bge-small-zh-v1.5。
       - 若模型下载/加载失败（典型 Streamlit Cloud 无 HF 网络的情况），退化做
-       「包含关键词的文档按命中条数粗排」兜底返回，避免整个问答功能挂掉。
+       「包含关键词的文档按有效 token 加权」兜底返回，避免整个问答功能挂掉。
     """
     col = get_collection()
     if not col.count():
@@ -167,33 +229,14 @@ def search(query: str, n=4, min_sim: float = 0.0) -> list[dict]:
                 })
         return out
     except Exception:
-        # Fallback：把库里所有文档拿出来，按「查询词里单字/词组命中」做粗打分。
-        # 仅在向量检索链路完全不可用时走，避免因为模型下载不到就 0 结果导致全拒答。
+        # Fallback：把库里所有文档拿出来，按「有效 token 加权命中」做粗打分。
         all_docs = col.get(include=["documents", "metadatas"])
-        ids = all_docs.get("ids") or []
         docs = all_docs.get("documents") or []
         metas = all_docs.get("metadatas") or []
         if not docs:
             return []
-
-        # 把查询拆成 1-gram + 2-gram token
-        q = query.strip()
-        tokens = set(q) | {q[i:i + 2] for i in range(len(q) - 1)}
-        scored = []
-        for doc, meta in zip(docs, metas):
-            if not doc:
-                continue
-            hits = sum(1 for t in tokens if t and t in doc)
-            if hits <= 0:
-                continue
-            # 归一化成 0-1：命中 token 数 / (token 总数 + 1)，避免除以 0
-            sim = min(0.99, hits / (len(tokens) + 1))
-            scored.append((sim, doc, (meta or {}).get("source", "")))
-        scored.sort(key=lambda x: -x[0])
-        return [
-            {"text": d, "sim": round(s, 4), "source": src}
-            for s, d, src in scored[:n]
-        ]
+        hits = _keyword_fallback(query, docs, metas, n=n)
+        return [h for h in hits if h["sim"] >= min_sim]
 
 
 if __name__ == "__main__":
