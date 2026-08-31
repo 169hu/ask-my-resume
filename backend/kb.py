@@ -16,14 +16,13 @@ import re
 os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
 # 也允许调用方显式设置 OFFLINE（例如 streamlit_app.py 在本地跑时会改成 0/1）。
 
-from sentence_transformers import SentenceTransformer
-import chromadb
-
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content"
 CHROMA_DIR = ROOT / "data" / "chroma"
 COLLECTION = "ask_kb"
 MODEL = "BAAI/bge-small-zh-v1.5"
+# 注意：sentence_transformers / chromadb 均延迟到 get_model()/get_client() 内导入。
+# 原因详见 get_model：云端缺 torch/torchvision 时，顶层导入会使整个 Streamlit 应用崩掉。
 
 # 查询侧指令前缀（v1.5 已放宽，M1 验证"不加前缀"区分度更高，故不启用）
 # QUERY_PREFIX = "为这个句子生成表示以用于检索相关文章："
@@ -33,9 +32,12 @@ _client = None
 _collection = None
 
 
-def get_model() -> SentenceTransformer:
+def get_model():  # -> SentenceTransformer（延迟导入，避免顶层 import 拖崩云端）
     global _model
     if _model is None:
+        # 延迟导入：云端若缺少 torch/torchvision 等重型依赖，只有真正请求模型下载/
+        # 向量化时才失败，查询链路会走到 search() 的关键词粗排兜底，页面不会整体崩。
+        from sentence_transformers import SentenceTransformer
         # HF_HUB_OFFLINE=1 时走本地缓存；否则允许联网（Streamlit Cloud 首次部署需要）。
         offline = os.environ.get("HF_HUB_OFFLINE", "0") in ("1", "true", "True", "yes")
         _model = SentenceTransformer(MODEL, local_files_only=offline)
@@ -45,6 +47,7 @@ def get_model() -> SentenceTransformer:
 def get_client():
     global _client
     if _client is None:
+        import chromadb  # 延迟导入：避免云端缺重型依赖时顶层 import 把整个 app 拖崩
         _client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     return _client
 
