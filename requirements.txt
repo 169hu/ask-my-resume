@@ -1,9 +1,12 @@
-# 说明：chromadb 跨版本不保证向后兼容 data/chroma/*.bin 的索引格式，
-#       所以必须钉死与本地建库时相同的版本（本地 chromadb 1.5.9 / sentence-transformers 6.0.0）。
+# ===== Streamlit Cloud 云端部署依赖 =====
+# 说明：
+#   - 不装 sentence-transformers / torch / transformers：云端已随仓库携带 data/chroma
+#    预计算向量库（本地 build 完成），检索链路在模型加载失败时自动降级为关键词粗排，
+#    因此云端无需 torch 等重型模型依赖。本地建库/完整检索请用本地 .venv（不在本清单）。
+#   - chromadb 版本必须与本地一致：跨版本目录格式不兼容会抛 KeyError。
 
-# 核心 UI（streamlit 相对宽松，1.36 之后的版本 API 稳定）
+# 核心 UI
 streamlit>=1.36,<2
 
-# 向量库 & 向量化
+# 向量库（读仓库内已入库的 data/chroma）
 chromadb==1.5.9
-sentence-transformers==6.0.0
