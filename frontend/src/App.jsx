@@ -4,6 +4,22 @@ import ChatWidget from './ChatWidget'
 
 const API = import.meta.env.DEV ? 'http://127.0.0.1:8000' : ''
 
+// 静态快照兜底：GitHub Pages 等纯静态托管下没有后端，降级读取构建产物里的 static-data.json
+const STATIC_DATA_URL = `${import.meta.env.BASE_URL ?? ''}static-data.json`
+
+async function fetchDataOrStatic(path, fallbackKey) {
+  try {
+    const apiRes = await fetch(`${API}${path}`)
+    if (apiRes.ok) return (await apiRes.json()) ?? null
+    throw new Error(`api ${path} -> ${apiRes.status}`)
+  } catch {
+    const staticRes = await fetch(STATIC_DATA_URL)
+    if (!staticRes.ok) return null
+    const snapshot = await staticRes.json()
+    return snapshot?.[fallbackKey] ?? null
+  }
+}
+
 // 把 URL 和邮箱转成可点击链接
 function linkify(s) {
   const re = /(https?:\/\/[^\s，。]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g
@@ -297,20 +313,20 @@ export default function App() {
 
   useEffect(() => {
     Promise.all([
-      fetch(`${API}/api/projects`).then((r) => r.json()),
-      fetch(`${API}/api/resume`).then((r) => r.json()),
-      fetch(`${API}/api/eval`)
-        .then((r) => r.json())
+      fetchDataOrStatic('/api/projects', 'projects'),
+      fetchDataOrStatic('/api/resume', 'resume'),
+      fetch('/api/eval')
+        .then((r) => (r.ok ? r.json() : Promise.resolve(null)))
         .catch(() => null),
     ])
       .then(([pj, rs, ev]) => {
-        setProjects(pj.items ?? [])
-        setResume(rs.body ?? '')
+        setProjects((pj?.items ?? pj) ?? [])
+        setResume(rs ? (rs.body ?? rs) : '')
         setEvalReport(ev)
         setLoading(false)
       })
       .catch(() => {
-        setError('后端未启动，请先运行 FastAPI 服务。')
+        setError('页面数据加载失败，请检查网络或稍后重试。')
         setLoading(false)
       })
   }, [])

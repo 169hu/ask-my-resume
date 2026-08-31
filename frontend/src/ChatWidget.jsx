@@ -62,7 +62,16 @@ export default function ChatWidget() {
       const data = await r.json()
       setMsgs((m) => [...m, { role: 'assistant', content: data.answer, hits: data.hits }])
     } catch {
-      setMsgs((m) => [...m, { role: 'assistant', content: '服务出错了，请稍后再试。' }])
+      // 静态托管（GitHub Pages）下没有后端 /api/chat，给出可理解的提示
+      setMsgs((m) => [
+        ...m,
+        {
+          role: 'assistant',
+          content: API
+            ? '服务出错了，请稍后再试。'
+            : '当前是静态展示版，AI 问答需要连接后端演示服务；完整版请访问仓库 README 中的在线演示链接。',
+        },
+      ])
     }
     setBusy(false)
     scrollToBottom()
