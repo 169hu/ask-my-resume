@@ -10,9 +10,11 @@ from pathlib import Path
 import os
 import re
 
-# 强制离线：模型已缓存到本地，联网校验会因无外网而超时卡住（见"教训"）
-os.environ.setdefault("HF_HUB_OFFLINE", "1")
-os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
+# 说明：默认不强制离线。本地开发可在 shell 里设置 HF_HUB_OFFLINE=1（模型已缓存时更快）。
+# Streamlit Cloud 首次部署需要联网下载 bge-small-zh-v1.5，因此不能写死 OFFLINE=1。
+# 为避免 HuggingFace 官方域名下载慢/失败，默认走镜像。
+os.environ.setdefault("HF_ENDPOINT", "https://hf-mirror.com")
+# 也允许调用方显式设置 OFFLINE（例如 streamlit_app.py 在本地跑时会改成 0/1）。
 
 from sentence_transformers import SentenceTransformer
 import chromadb
@@ -34,7 +36,9 @@ _collection = None
 def get_model() -> SentenceTransformer:
     global _model
     if _model is None:
-        _model = SentenceTransformer(MODEL, local_files_only=True)
+        # HF_HUB_OFFLINE=1 时走本地缓存；否则允许联网（Streamlit Cloud 首次部署需要）。
+        offline = os.environ.get("HF_HUB_OFFLINE", "0") in ("1", "true", "True", "yes")
+        _model = SentenceTransformer(MODEL, local_files_only=offline)
     return _model
 
 
