@@ -229,15 +229,21 @@ section[id] { scroll-margin-top: 0; }
 .skill-en { font-size: 0.76rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; margin-left: auto; }
 .skill-row { display: contents; }
 .skill-row .skill-lab,
-.skill-row .skill-track,
 .skill-row .skill-val {
   padding: 13px 0;
   border-top: 1px solid var(--line);
 }
+/* track 不参与行内 padding 分隔，改为垂直居中，保证 height:8px 生效 */
+.skill-row .skill-track {
+  align-self: center;
+  padding: 0;
+  border-top: 1px solid var(--line);
+  height: 8px;
+}
 .skill-group .skill-row:first-child .skill-lab,
-.skill-group .skill-row:first-child .skill-track,
-.skill-group .skill-row:first-child .skill-val {
-  padding-top: 6px;
+.skill-group .skill-row:first-child .skill-val,
+.skill-group .skill-row:first-child .skill-track {
+  padding-top: 0;
   border-top: none;
 }
 .skill-lab {
