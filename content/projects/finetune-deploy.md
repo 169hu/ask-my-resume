@@ -5,7 +5,7 @@ order: 5
 tech: [Python, PyTorch, PEFT/QLoRA, Transformers, Streamlit]
 tag: 主打
 online_demo: true
-demo_url: https://464a9d28.r10.cpolar.top
+demo_url: https://3ym4gjzwfklkjq4v5ac9mz.streamlit.app/
 metrics:
   - label: BLEU-4
     value: 0.824

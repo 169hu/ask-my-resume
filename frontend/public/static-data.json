@@ -14,7 +14,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://5a83ca08.r3.cpolar.cn",
+   "demo_url": "https://ops-pilot-bnx8vczmzrvmcmrjka3gje.streamlit.app/",
    "metrics": [
     {
      "label": "注入拦截率",
@@ -60,7 +60,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://196c399f.r10.cpolar.top",
+   "demo_url": "https://5u25xmjzwlimdaojhrh2tf.streamlit.app/",
    "metrics": [
     {
      "label": "多 Agent 编排",
@@ -107,7 +107,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://29ce30cc.r10.cpolar.top",
+   "demo_url": "https://2gc8vfhnkkzuy7bwjcknye.streamlit.app/",
    "metrics": [
     {
      "label": "Faithfulness",
@@ -154,7 +154,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://54402fa1.r18.vip.cpolar.cn",
+   "demo_url": "https://ai-workbench-cobfrbbwvygiymtqrcv2zn.streamlit.app/",
    "metrics": [
     {
      "label": "检索命中率",
@@ -199,7 +199,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://464a9d28.r10.cpolar.top",
+   "demo_url": "https://3ym4gjzwfklkjq4v5ac9mz.streamlit.app/",
    "metrics": [
     {
      "label": "BLEU-4",
@@ -244,7 +244,7 @@
    ],
    "tag": "主打",
    "online_demo": true,
-   "demo_url": "https://2badf179.r10.cpolar.top",
+   "demo_url": "https://multi-agent-playground-mgoykx8wgaug6m95vhytut.streamlit.app/",
    "metrics": [
     {
      "label": "Agent 角色",

@@ -5,7 +5,7 @@ order: 1
 tech: [Python, LangGraph, FastAPI, React, AntD, Docker]
 tag: 主打
 online_demo: true
-demo_url: https://5a83ca08.r3.cpolar.cn
+demo_url: https://ops-pilot-bnx8vczmzrvmcmrjka3gje.streamlit.app/
 metrics:
   - label: 注入拦截率
     value: 100%

@@ -5,7 +5,7 @@ order: 3
 tech: [Python, RAG, ChromaDB, DeepSeek, Streamlit, FastAPI, Docker]
 tag: 主打
 online_demo: true
-demo_url: https://29ce30cc.r10.cpolar.top
+demo_url: https://2gc8vfhnkkzuy7bwjcknye.streamlit.app/
 metrics:
   - label: Faithfulness
     value: 98%

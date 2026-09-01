@@ -4,10 +4,16 @@
 
 ## 在线演示
 
-> 演示地址以 `scripts/restore_tunnels.ps1` 运行输出为准；仓库内写死的链接不保证长期有效（免费版 cpolar 每次重启地址都会变，跑一次脚本即刷新）。
+6 个项目均已部署到 Streamlit Cloud（永久地址），GitHub Pages 作品集项目详情页的「打开项目试玩 Demo」按钮直接跳转到对应演示应用：
 
-- 作品集：见 README 顶部注释或运行恢复脚本获取
-- 6 个项目详情页内的「打开项目试玩 Demo」按钮指向各自可运行的演示应用
+- 作品集（GitHub Pages）：https://169hu.github.io/ask-my-resume/
+- 作品集 AI 答疑（Streamlit）：https://ask-my-resume-m7hzapnphb6c2ktwbpkcxb.streamlit.app/
+- OpsPilot：https://ops-pilot-bnx8vczmzrvmcmrjka3gje.streamlit.app/
+- AgentHub：https://5u25xmjzwlimdaojhrh2tf.streamlit.app/
+- 劳动法律助手：https://2gc8vfhnkkzuy7bwjcknye.streamlit.app/
+- AI 智能工作台：https://ai-workbench-cobfrbbwvygiymtqrcv2zn.streamlit.app/
+- 大模型微调与部署：https://3ym4gjzwfklkjq4v5ac9mz.streamlit.app/
+- 多 Agent 协作系统：https://multi-agent-playground-mgoykx8wgaug6m95vhytut.streamlit.app/
 
 ## 功能
 

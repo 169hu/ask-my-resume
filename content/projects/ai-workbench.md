@@ -5,7 +5,7 @@ order: 4
 tech: [Python, LangGraph, ChromaDB, Neo4j, Streamlit, GraphRAG, DeepSeek]
 tag: 主打
 online_demo: true
-demo_url: https://54402fa1.r18.vip.cpolar.cn
+demo_url: https://ai-workbench-cobfrbbwvygiymtqrcv2zn.streamlit.app/
 metrics:
   - label: 检索命中率
     value: 96.67%
