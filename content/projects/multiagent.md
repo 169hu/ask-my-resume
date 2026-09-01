@@ -1,7 +1,7 @@
 ---
 title: 多 Agent 协作系统
 path: multiagent
-order: 6
+order: 7
 tech: [Python, LangGraph, LangChain, DeepSeek, ThreadPool]
 tag: 主打
 online_demo: true
