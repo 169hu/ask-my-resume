@@ -106,7 +106,7 @@ with st.sidebar:
         "- 注入意图 → 直接拦截\n"
         "- 每个论点必须带可追溯的 [n] 引用"
     )
-    if st.button("🔄 重建知识库", use_container_width=True):
+    if st.button("重建知识库"):
         try:
             # 强制跳过 cache_resource：直接调用 build
             n = kb.build()
