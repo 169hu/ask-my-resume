@@ -35,8 +35,8 @@
 # 1. 后端
 .venv\Scripts\python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8001
 
-# 2. 前端构建
-cd frontend && npm install && npm run build   # 构建产物由后端托管
+# 2. 前端构建（单文件 index.html，由后端托管 frontend/dist）
+py -3 scripts/build_frontend.py
 ```
 
 或直接双击 `scripts/start_all_demos.ps1` 一键启动包含 6 个项目演示在内的全部服务。

@@ -23,13 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
@@ -40,11 +33,9 @@ jobs:
           python -m pip install python-frontmatter
           python scripts/export_static.py
 
-      - name: Build frontend
-        working-directory: frontend
+      - name: Build frontend (static assets)
         run: |
-          npm ci
-          npm run build
+          python scripts/build_frontend.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
