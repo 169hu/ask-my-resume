@@ -265,7 +265,9 @@ section[id] { scroll-margin-top: 0; }
   padding: 26px 26px 22px; display: flex; flex-direction: column;
   transition: transform .2s ease, box-shadow .2s ease;
 }
-.pcard:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(30,35,42,.08); }
+.pcard { cursor: pointer; }
+.pcard:hover { transform: translateY(-4px); box-shadow: 0 18px 50px rgba(30,35,42,.08); border-color: var(--teal); }
+.pcard:active { transform: translateY(-2px); }
 .pcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .pcard-title { font-family: var(--serif); font-size: 1.22rem; font-weight: 700; color: var(--ink); line-height: 1.4; }
 .pcard-no { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--line-strong); flex: none; line-height: 1; }
@@ -284,6 +286,84 @@ section[id] { scroll-margin-top: 0; }
 .pcard-result::before { content: ""; width: 6px; height: 6px; background: var(--teal); border-radius: 2px; flex: none; align-self: center; }
 .pcard-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; }
 .pcard-links a { font-size: 0.86rem; font-weight: 500; border-bottom: 1px solid var(--teal-tint); padding-bottom: 1px; }
+
+/* ---------- 项目详情模态框 ---------- */
+.pmodal {
+  position: fixed; inset: 0; z-index: 200;
+  display: none; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.pmodal.open { display: flex; }
+.pmodal-bg {
+  position: absolute; inset: 0;
+  background: rgba(30,35,42,.42); backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.pmodal-panel {
+  position: relative; z-index: 1;
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 20px;
+  max-width: 760px; width: 100%; max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 30px 80px rgba(30,35,42,.25);
+  overflow: hidden;
+  animation: pmIn .22s ease-out;
+}
+@keyframes pmIn {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+.pmodal-head {
+  padding: 28px 32px 18px; border-bottom: 1px solid var(--line);
+  background: var(--paper-2);
+}
+.pmodal-title { font-family: var(--serif); font-size: 1.45rem; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.pmodal-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pmodal-close {
+  position: absolute; top: 16px; right: 16px; z-index: 2;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--line-strong); background: var(--paper);
+  color: var(--ink-soft); font-size: 18px; line-height: 1; cursor: pointer;
+  display: grid; place-items: center; transition: all .15s;
+}
+.pmodal-close:hover { border-color: var(--ink); color: var(--ink); background: var(--paper-2); }
+.pmodal-body {
+  padding: 24px 32px 28px; overflow-y: auto; flex: 1;
+  font-size: 0.95rem; line-height: 1.8; color: var(--ink);
+}
+.pmodal-body h3 {
+  font-family: var(--serif); font-size: 1.08rem; font-weight: 700;
+  color: var(--ink); margin: 22px 0 10px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.pmodal-body h3:first-child { margin-top: 0; }
+.pmodal-body p { margin-bottom: 10px; }
+.pmodal-body strong { color: var(--ink); font-weight: 600; }
+.pmodal-body ul { padding-left: 20px; margin-bottom: 10px; }
+.pmodal-body li { margin-bottom: 4px; }
+.pmodal-body code {
+  background: var(--paper-2); padding: 1px 6px; border-radius: 4px;
+  font-size: 0.85em; font-family: "SF Mono", Consolas, monospace;
+}
+.pmodal-body a { text-decoration: underline; text-underline-offset: 3px; }
+.pmodal-metrics {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+  margin: 14px 0 18px;
+}
+.pmodal-metric {
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 14px;
+}
+.pmodal-metric .val { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; color: var(--teal-deep); }
+.pmodal-metric .lab { font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+.pmodal-foot {
+  padding: 16px 32px 20px; border-top: 1px solid var(--line);
+  display: flex; gap: 16px; flex-wrap: wrap;
+  background: var(--paper-2);
+}
+.pmodal-foot a {
+  font-size: 0.88rem; font-weight: 500;
+  border-bottom: 1px solid var(--teal); padding-bottom: 2px;
+}
 
 /* ===================== 评测门禁 ===================== */
 .eval-banner {
@@ -442,6 +522,11 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
   .hstat { padding: 14px 12px; }
   .skill-group { grid-template-columns: minmax(96px, max-content) 1fr 40px; column-gap: 10px; }
   .pcard { padding: 22px 20px 18px; }
+  .pmodal-panel { max-height: 92vh; border-radius: 16px; }
+  .pmodal-head { padding: 22px 22px 14px; }
+  .pmodal-body { padding: 18px 22px 22px; }
+  .pmodal-foot { padding: 12px 22px 16px; }
+  .pmodal-metrics { grid-template-columns: 1fr; }
   .contact-panel { padding: 40px 22px; border-radius: 18px; }
 }
 
@@ -639,7 +724,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     </div>
     <div class="projects-grid">
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="ops-pilot">
         <div class="pcard-top"><h3 class="pcard-title">运维工单智能助手</h3><span class="pcard-no">01</span></div>
         <div class="pcard-tech"><span class="chip">LangGraph</span><span class="chip">FastAPI</span><span class="chip">React/AntD</span><span class="chip">Docker</span></div>
         <p class="pcard-row"><b>为什么做：</b>运维工单靠人工一条条看，重复且容易漏。</p>
@@ -648,7 +733,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://ops-pilot-bnx8vczmzrvmcmrjka3gje.streamlit.app/" target="_blank" rel="noopener">在线演示 →</a><a href="https://github.com/169hu/ops-pilot" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="agenthub">
         <div class="pcard-top"><h3 class="pcard-title">供应链风险分析系统</h3><span class="pcard-no">02</span></div>
         <div class="pcard-tech"><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">RAGAS</span></div>
         <p class="pcard-row"><b>为什么做：</b>供应链风险靠人工从大量资料里扒，费时且容易漏。</p>
@@ -657,7 +742,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://5u25xmjzwlimdaojhrh2tf.streamlit.app/" target="_blank" rel="noopener">在线演示 →</a><a href="https://github.com/169hu/agenthub" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="legal-assistant">
         <div class="pcard-top"><h3 class="pcard-title">劳动法律问答助手</h3><span class="pcard-no">03</span></div>
         <div class="pcard-tech"><span class="chip">Python</span><span class="chip">ChromaDB</span><span class="chip">FastAPI</span><span class="chip">Docker</span></div>
         <p class="pcard-row"><b>为什么做：</b>市面法律 AI 答得流畅但常编造法条，不敢信。</p>
@@ -666,7 +751,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://2gc8vfhnkkzuy7bwjcknye.streamlit.app/" target="_blank" rel="noopener">在线演示 →</a><a href="https://github.com/169hu/legal-assistant" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="finetune-deploy">
         <div class="pcard-top"><h3 class="pcard-title">AI 翻译模型训练</h3><span class="pcard-no">04</span></div>
         <div class="pcard-tech"><span class="chip">PyTorch</span><span class="chip">QLoRA</span><span class="chip">vLLM</span></div>
         <p class="pcard-row"><b>为什么做：</b>翻译工具要么付费、要么质量差。</p>
@@ -675,7 +760,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://3ym4gjzwfklkjq4v5ac9mz.streamlit.app/" target="_blank" rel="noopener">在线演示 →</a><a href="https://github.com/169hu/qwen-finetune" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="ai-workbench">
         <div class="pcard-top"><h3 class="pcard-title">AI 智能工作台</h3><span class="pcard-no">05</span></div>
         <div class="pcard-tech"><span class="chip">Python</span><span class="chip">ChromaDB</span><span class="chip">Neo4j</span><span class="chip">LangGraph</span></div>
         <p class="pcard-row"><b>为什么做：</b>AI 能力散落在不同工具里，使用不便。</p>
@@ -684,7 +769,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://ai-workbench-cobfrbbwvygiymtqrcv2zn.streamlit.app/" target="_blank" rel="noopener">在线演示 →</a><a href="https://github.com/169hu/ai-workbench" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="agent-eval-lab">
         <div class="pcard-top"><h3 class="pcard-title">Agent 评测系统</h3><span class="pcard-no">06</span></div>
         <div class="pcard-tech"><span class="chip">LangGraph</span><span class="chip">MCP</span><span class="chip">asyncio</span></div>
         <p class="pcard-row"><b>为什么做：</b>AI 助手改一版是否变好，光靠人测不靠谱。</p>
@@ -693,7 +778,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
         <div class="pcard-links"><a href="https://github.com/169hu/agent-eval-lab" target="_blank" rel="noopener">GitHub</a></div>
       </article>
 
-      <article class="pcard reveal">
+      <article class="pcard reveal" data-path="multiagent">
         <div class="pcard-top"><h3 class="pcard-title">多角色协作写报告</h3><span class="pcard-no">07</span></div>
         <div class="pcard-tech"><span class="chip">LangGraph</span></div>
         <p class="pcard-row"><b>为什么做：</b>写长报告时单次对话总是前后不连贯。</p>
@@ -797,6 +882,20 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
   </div>
 </footer>
 
+<!-- ===================== 项目详情模态框 ===================== -->
+<div id="pmodal" class="pmodal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="pmodal-bg" data-pmodal-close></div>
+  <div class="pmodal-panel">
+    <button class="pmodal-close" data-pmodal-close aria-label="关闭">✕</button>
+    <div class="pmodal-head">
+      <h3 class="pmodal-title" id="pmTitle"></h3>
+      <div class="pmodal-tech" id="pmTech"></div>
+    </div>
+    <div class="pmodal-body" id="pmBody"></div>
+    <div class="pmodal-foot" id="pmFoot"></div>
+  </div>
+</div>
+
 <script>
 (function () {
   'use strict';
@@ -844,6 +943,149 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     }, { threshold: 0.12 });
     reveals.forEach(function (r) { io.observe(r); });
   }
+
+  /* ---------- 项目详情模态框 ---------- */
+  (function () {
+    var modal = document.getElementById('pmodal');
+    if (!modal) return;
+    var titleEl = document.getElementById('pmTitle');
+    var techEl = document.getElementById('pmTech');
+    var bodyEl = document.getElementById('pmBody');
+    var footEl = document.getElementById('pmFoot');
+    var projectsData = null;
+
+    function open() {
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    // 简单 markdown 渲染：## 标题 / **粗体** / - 列表 / `代码` / 段落
+    function renderMd(md) {
+      if (!md) return '';
+      var lines = md.split('\n');
+      var html = '';
+      var inList = false;
+      lines.forEach(function (line) {
+        var t = line.trim();
+        // ## 二级标题
+        if (t.indexOf('## ') === 0) {
+          if (inList) { html += '</ul>'; inList = false; }
+          html += '<h3>' + esc(t.slice(3)) + '</h3>';
+          return;
+        }
+        // - 列表项
+        if (t.indexOf('- ') === 0) {
+          if (!inList) { html += '<ul>'; inList = true; }
+          html += '<li>' + inlineMd(t.slice(2)) + '</li>';
+          return;
+        }
+        // 空行
+        if (!t) {
+          if (inList) { html += '</ul>'; inList = false; }
+          return;
+        }
+        // 普通段落
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p>' + inlineMd(t) + '</p>';
+      });
+      if (inList) html += '</ul>';
+      return html;
+    }
+
+    function inlineMd(s) {
+      // **粗体**
+      s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      // `代码`
+      s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+      return esc(s);
+    }
+
+    function showProject(path) {
+      if (!projectsData) {
+        // 数据未加载，先取
+        fetch('static-data.json')
+          .then(function (r) { if (r.ok) return r.json(); throw new Error(r.status); })
+          .then(function (snap) {
+            projectsData = snap && snap.projects ? snap.projects : [];
+            showProject(path);
+          })
+          .catch(function () { showProject(path); });
+        return;
+      }
+      var item = null;
+      for (var i = 0; i < projectsData.length; i++) {
+        if (projectsData[i].path === path) { item = projectsData[i]; break; }
+      }
+      if (!item) { return; }
+
+      titleEl.textContent = item.title || '';
+      // 技术栈 chips
+      techEl.innerHTML = '';
+      (item.tech || []).forEach(function (t) {
+        var s = document.createElement('span');
+        s.className = 'chip';
+        s.textContent = t;
+        techEl.appendChild(s);
+      });
+      // 指标
+      bodyEl.innerHTML = '';
+      var metrics = item.metrics || [];
+      if (metrics.length) {
+        var mg = document.createElement('div');
+        mg.className = 'pmodal-metrics';
+        metrics.forEach(function (m) {
+          var d = document.createElement('div');
+          d.className = 'pmodal-metric';
+          d.innerHTML = '<div class="val">' + esc(String(m.value)) + '</div>' +
+            '<div class="lab">' + esc(m.label) + (m.hint ? ' · ' + esc(m.hint) : '') + '</div>';
+          mg.appendChild(d);
+        });
+        bodyEl.appendChild(mg);
+      }
+      // 正文（去掉 frontmatter 摘要里的"## 一句话"重复）
+      var body = item.body || '';
+      bodyEl.innerHTML += renderMd(body);
+
+      // 底部链接
+      footEl.innerHTML = '';
+      if (item.online_demo && item.demo_url) {
+        var a1 = document.createElement('a');
+        a1.href = item.demo_url; a1.target = '_blank'; a1.rel = 'noopener';
+        a1.textContent = '在线演示 →';
+        footEl.appendChild(a1);
+      }
+      if (item.github) {
+        var a2 = document.createElement('a');
+        a2.href = item.github; a2.target = '_blank'; a2.rel = 'noopener';
+        a2.textContent = 'GitHub';
+        footEl.appendChild(a2);
+      }
+      open();
+    }
+
+    // 点击卡片打开
+    document.querySelectorAll('.pcard[data-path]').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        // 如果点的是卡片内的链接，让链接正常跳转（不打开模态框）
+        if (e.target.closest('a')) return;
+        showProject(card.getAttribute('data-path'));
+      });
+    });
+
+    // 关闭
+    modal.addEventListener('click', function (e) {
+      if (e.target.getAttribute('data-pmodal-close') !== null) close();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('open')) close();
+    });
+  })();
 
   /* ---------- 评测门禁：动态拉取 ---------- */
   var mount = document.getElementById('evalMount');
