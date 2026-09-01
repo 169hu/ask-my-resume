@@ -216,23 +216,41 @@ section[id] { scroll-margin-top: 0; }
 .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 26px 40px; }
 .skill-group {
   background: var(--card); border: 1px solid var(--line); border-radius: 16px;
-  padding: 24px 24px 12px;
+  padding: 24px 24px 8px;
+  display: grid;
+  grid-template-columns: minmax(116px, max-content) 1fr 44px;
+  column-gap: 14px;
+  align-items: center;
 }
-.skill-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+.skill-head { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 12px; margin-bottom: 12px; }
 .skill-head .sg-ic { width: 20px; height: 20px; color: var(--teal); align-self: center; flex: none; }
 .skill-head .sg-ic svg { width: 20px; height: 20px; }
 .skill-name { font-family: var(--serif); font-size: 1.06rem; font-weight: 700; color: var(--ink); }
 .skill-en { font-size: 0.76rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; margin-left: auto; }
-.skill-row { display: flex; align-items: center; gap: 14px; padding: 11px 0; }
-.skill-row + .skill-row { border-top: 1px solid var(--line); }
-.skill-lab { width: 108px; flex: none; font-size: 0.88rem; color: var(--ink-soft); }
+.skill-row { display: contents; }
+.skill-row .skill-lab,
+.skill-row .skill-track,
+.skill-row .skill-val {
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.skill-group .skill-row:first-child .skill-lab,
+.skill-group .skill-row:first-child .skill-track,
+.skill-group .skill-row:first-child .skill-val {
+  padding-top: 6px;
+  border-top: none;
+}
+.skill-lab {
+  font-size: 0.88rem; color: var(--ink-soft);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .skill-track { flex: 1; height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
 .skill-fill {
-  height: 100%; width: 0; border-radius: 999px;
+  display: block; height: 100%; width: 0; border-radius: 999px;
   background: linear-gradient(90deg, var(--teal), var(--teal-deep));
   transition: width 1.1s cubic-bezier(.22,.8,.3,1);
 }
-.skill-val { font-family: var(--serif); font-weight: 700; font-size: 0.92rem; color: var(--teal-deep); width: 40px; text-align: right; flex: none; }
+.skill-val { font-family: var(--serif); font-weight: 700; font-size: 0.92rem; color: var(--teal-deep); text-align: right; white-space: nowrap; }
 
 /* ===================== 项目经历 ===================== */
 .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
@@ -416,7 +434,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
   .wrap { padding: 0 20px; }
   .section { padding: 50px 0; }
   .hstat { padding: 14px 12px; }
-  .skill-lab { width: 90px; }
+  .skill-group { grid-template-columns: minmax(96px, max-content) 1fr 40px; column-gap: 10px; }
   .pcard { padding: 22px 20px 18px; }
   .contact-panel { padding: 40px 22px; border-radius: 18px; }
 }
