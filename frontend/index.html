@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>胡进林 · AI 应用开发工程师 · 秋招求职</title>
 <meta name="description" content="AI 应用开发工程师 · 秋招求职。RAG · Agent · 微调 · 部署 · 评测，7 个独立完成、可当场演示的开源项目，全部量化数据可复核。">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -1009,7 +1012,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     function showProject(path) {
       if (!projectsData) {
         // 数据未加载，先取
-        fetch('static-data.json')
+        fetch('static-data.json?v=20260901')
           .then(function (r) { if (r.ok) return r.json(); throw new Error(r.status); })
           .then(function (snap) {
             projectsData = snap && snap.projects ? snap.projects : [];
@@ -1158,12 +1161,12 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     mount.innerHTML = html;
   }
 
-  fetch('api/eval')
+  fetch('api/eval?v=20260901')
     .then(function (r) { if (r.ok) return r.json(); throw new Error('api/eval ' + r.status); })
     .then(render)
     .catch(function () {
       // 纯静态托管降级：读取构建产物里的 static-data.json 兜底
-      return fetch('static-data.json')
+      return fetch('static-data.json?v=20260901')
         .then(function (r) { if (r.ok) return r.json(); throw new Error('static-data ' + r.status); })
         .then(function (snap) { render(snap ? snap.eval : null); })
         .catch(function () { render(null); });
