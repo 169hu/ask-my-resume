@@ -1002,11 +1002,12 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     }
 
     function inlineMd(s) {
+      s = esc(s);
       // **粗体**
       s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       // `代码`
       s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-      return esc(s);
+      return s;
     }
 
     function showProject(path) {
