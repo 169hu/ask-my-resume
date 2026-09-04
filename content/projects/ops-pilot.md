@@ -9,7 +9,7 @@ demo_url: https://ops-pilot-bnx8vczmzrvmcmrjka3gje.streamlit.app/
 metrics:
   - label: 注入拦截率
     value: 100%
-    hint: Prompt Injection 门禁
+    hint: 提示词注入（Prompt Injection）门禁
   - label: 敏感系统拦截
     value: 100%
     hint: 生产/敏感库禁自动执行
@@ -37,8 +37,8 @@ Agent 权限越大越好用，但也越危险：一旦被诱导或越权，可�
 
 ## 方案
 - **Tool Gateway（阶段1）**：所有工具调用的唯一入口，走 7 步调用链（启用校验→input_schema→角色→风险判定→审批判断→审计落盘→统一契约）。6 工具含风险三级：`search_kb`/`query_user_profile`/`query_system_status`/`check_permission_policy`（LOW 自动）、`grant_permission`（中/高、动态升级）、`create_incident_task`。攻击防护覆盖注入/越权/敏感系统/批量/参数缺失。
-- **LangGraph 3 Agent（阶段2）**：Triage（意图/类别/优先级/风险）→ Retrieval（抽取→RAG→证据）→ Action（工具计划+审批判断）+ `risk_router`（LOW 自动 / MEDIUM 待审批 / HIGH 拒执或转主管）。
-- **Eval 闭环（阶段3）**：30 golden 能力样例 + 10 攻击样例，能力指标（intent/risk/tool_sel/param/status）+ **红线门禁 5 项须 100%**；攻击优先级固定为 注入 > 敏感系统 > 批量操作。
+- **LangGraph 3 Agent（阶段2）**：分流 Triage（意图/类别/优先级/风险）→ 检索 Retrieval（抽取→RAG→证据）→ 执行 Action（工具计划+审批判断）+ `risk_router`（LOW 自动 / MEDIUM 待审批 / HIGH 拒执或转主管）。
+- **评测闭环 Eval（阶段3）**：30 条标准能力样例（golden）+ 10 条攻击样例，能力指标（intent/risk/tool_sel/param/status）+ **红线门禁 5 项须 100%**；攻击优先级固定为 注入 > 敏感系统 > 批量操作。
 - **LLM 双驱动**：`deepseek`（真实 API）/ `rule`（离线可复现），Agent 统一走 `llm.chat_json`，切换驱动不改节点代码。
 - 前端 React + AntD 5 页面（工单/详情/审批/审计/评测）、Docker Compose 单容器一键部署（SPA 路由回退、健康检查、镜像内可复现）。
 

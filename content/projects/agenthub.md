@@ -12,11 +12,11 @@ metrics:
     hint: 主控/研究员/分析师/风控官
   - label: Guard 双闸
     value: 输入硬拦 / 输出复核
-    hint: 注入/越权硬拦 · 空答/幻觉 warn
+    hint: 注入/越权硬拦 · 空答/幻觉复核
   - label: MCP 数据源
     value: 3 个
     hint: 内部库/知识图谱/法律检索
-  - label: Hit Rate
+  - label: 命中率
     value: 0.90
     hint: RAGAS 基线 19/20
 highlight:

@@ -39,12 +39,12 @@ AI 智能工作台是一个集 **RAG / Agent / 多 Agent / GraphRAG** 于一体�
 - **4 层架构**：展示层（Streamlit 多页面）→ 业务逻辑层（RAG/GraphRAG/Agent/多Agent）→ 统一接入层（LLMClient 云端/本地一键切换）→ 工具层（持久化/文档加载/日志/向量库）。
 - **RAG 引擎**：HyDE 伪文档 + 混合检索（BM25+向量）+ RRF 融合 + 重排序；GraphRAG 走 Neo4j + Cypher 自动生成。
 - **Agent 双路径 Function Calling**：云端走原生 tools，本地走 JSON 降级。
-- **自动化评估闭环**：关键词命中率 + RAGAS + LLM-as-Judge + 自研评估器四路对比。
+- **自动化评估闭环**：关键词命中率 + RAGAS + LLM 评委（LLM-as-Judge）+ 自研评估器四路对比。
 
 ## 结果与亮点
 - 检索命中率经 4 轮迭代从 **37.5% → 96.67%**；扩展文档库（含语义干扰/专有名词）混合检索 **95% vs 纯向量 80%**（top_k=3）。
-- **自研评估器**测出 **Faithfulness 1.000 / 上下文相关性 1.000**；LLM-as-Judge 平均 **9.67/10**；无答案问题拒答率 80%。
-- Bad Case 分析定位到 RAGAS 0.1.0 在 DeepSeek 上报 0/N/A 的根因（n>1 多采样不支持），自行绕开并修复。
+- **自研评估器**测出 **Faithfulness 1.000 / 上下文相关性 1.000**；LLM 评委（LLM-as-Judge）平均 **9.67/10**；无答案问题拒答率 80%。
+- 失败样例（Bad Case）分析定位到 RAGAS 0.1.0 在 DeepSeek 上报 0/N/A 的根因（n>1 多采样不支持），自行绕开并修复。
 
 ## 踩过的坑
 - **RAGAS 在 DeepSeek 上失效**：faithfulness 恒 0/N/A，根因是内部依赖 n>1 多采样而 DeepSeek 不支持——自研拆句逐句判定评估器解决。

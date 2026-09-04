@@ -21,11 +21,11 @@ metrics:
     hint: 低资源微调
 highlight:
   - QLoRA 4-bit 微调 Qwen2-1.5B，留出集 BLEU-4 = 0.824
-  - Bad Case 分析指出 BLEU 对同义改写误罚的局限
+  - 失败样例分析指出 BLEU 对同义改写误罚的局限
 github: https://github.com/169hu/qwen-finetune
 ---
 ## 一句话
-Qwen2-1.5B 中英翻译微调项目，基于 **QLoRA(4-bit) + LoRA** 做指令微调，完整走通"数据生成 → 训练 → BLEU 评估 → Bad Case 分析"链路。
+Qwen2-1.5B 中英翻译微调项目，基于 **QLoRA(4-bit) + LoRA** 做指令微调，完整走通"数据生成 → 训练 → BLEU 评估 → 失败样例（Bad Case）分析"链路。
 
 ## 背景
 只做 RAG 调 API 不够，要证明自己"能把模型真正训出来并评估上线"。本项目选小模型 Qwen2-1.5B 做中译英微调，既控制成本又覆盖完整训练闭环。
@@ -43,9 +43,9 @@ Qwen2-1.5B 中英翻译微调项目，基于 **QLoRA(4-bit) + LoRA** 做指令�
 
 ## 结果与亮点
 - 留出集平均 **BLEU-4 = 0.824**：短句（与训练分布接近）8 条 **1.000**、需泛化长句 4 条 **0.472**（达意但同义差异）。
-- **Bad Case 分析**发现：长句 BLEU 偏低是"语义正确、用词不同"的同义改写（set off/set out、meet/catch up with），并非翻译错误——从而提出引入 chrF / COMET 或多样参考译文来消除误罚。
+- **失败样例（Bad Case）分析**发现：长句 BLEU 偏低是"语义正确、用词不同"的同义改写（set off/set out、meet/catch up with），并非翻译错误——从而提出引入 chrF / COMET 或多样参考译文来消除误罚。
 - 训练 loss 从 10.27 降至 8.10（冒烟 30 步，3200 完整训练由 `plot` 生成正式曲线）。
 
 ## 踩过的坑
-- BLEU 只看字面 n-gram 重合，会误罚同义改写长句：补充 Bad Case 人工分析，结论改用更鲁棒语义指标评估。
+- BLEU 只看字面 n-gram 重合，会误罚同义改写长句：补充失败样例人工分析，结论改用更鲁棒语义指标评估。
 - 全参微调会爆显存：改用 QLoRA 4-bit 低资源微调，效果与资源取得平衡。
