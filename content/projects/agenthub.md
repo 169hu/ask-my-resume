@@ -10,9 +10,9 @@ metrics:
   - label: 多 Agent 编排
     value: 4 Agent
     hint: 主控/研究员/分析师/风控官
-  - label: Guard 输入拦截
-    value: 命中即拒
-    hint: 注入/越权/敏感信息
+  - label: Guard 双闸
+    value: 输入硬拦 / 输出复核
+    hint: 注入/越权硬拦 · 空答/幻觉 warn
   - label: MCP 数据源
     value: 3 个
     hint: 内部库/知识图谱/法律检索

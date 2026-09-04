@@ -16,9 +16,9 @@ metrics:
   - label: 混合检索增益
     value: +15pp
     hint: 扩展库 top_k=3 80%→95%
-  - label: LLM-as-Judge
-    value: 9.67/10
-    hint: 批量 LLM 打分
+  - label: 无答案拒答
+    value: 80%
+    hint: 低相关上下文拒答（README 已知项）
 highlight:
   - RAG / Agent / 多Agent / GraphRAG 全家桶，4 层模块化架构 + 云端/本地模型无缝切换
   - 自研忠实度评估器绕开 RAGAS 的 n>1 多采样限制，测出真实 Faithfulness 1.000
