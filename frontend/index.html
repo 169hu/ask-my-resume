@@ -1012,7 +1012,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     function showProject(path) {
       if (!projectsData) {
         // 数据未加载，先取
-        fetch('static-data.json?v=20260901')
+        fetch('static-data.json?v=20260904')
           .then(function (r) { if (r.ok) return r.json(); throw new Error(r.status); })
           .then(function (snap) {
             projectsData = snap && snap.projects ? snap.projects : [];
@@ -1166,7 +1166,7 @@ details.eval-logic[open] summary::before { transform: rotate(45deg); }
     .then(render)
     .catch(function () {
       // 纯静态托管降级：读取构建产物里的 static-data.json 兜底
-      return fetch('static-data.json?v=20260901')
+      return fetch('static-data.json?v=20260904')
         .then(function (r) { if (r.ok) return r.json(); throw new Error('static-data ' + r.status); })
         .then(function (snap) { render(snap ? snap.eval : null); })
         .catch(function () { render(null); });
