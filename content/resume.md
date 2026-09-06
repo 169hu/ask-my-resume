@@ -30,7 +30,7 @@ tag: 个人信息
 
 ## 会什么
 - **语言与框架**：Python（主力）· JavaScript / React / AntD · FastAPI · Streamlit
-- **LLM 应用**：LangChain · LangGraph · Function Calling · Prompt Engineering
+- **LLM 应用**：LangChain · LangGraph（状态图 + 持久化可恢复）· MCP · Agentic RAG · 多 Agent 编排 · Function Calling · Prompt Engineering
 - **检索与 RAG**：ChromaDB（cosine 距离，踩过 L2 坑）· Neo4j GraphRAG · bge 中文向量 · 混合检索（BM25 + 向量 + RRF k=60）· HyDE · 选型对比过 Milvus / PGVector
 - **数据与部署**：Docker · Git · Sqlite / MySQL（关系型 DB 原理 + Sqlite 无缝迁移）· Redis（缓存层选型）· vLLM（PagedAttention 推理加速）
 - **微调与评测**：PyTorch · PEFT / QLoRA 4-bit · RAGAS（Hit Rate / Faithfulness）· BLEU-4
