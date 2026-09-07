@@ -7,7 +7,7 @@ tag: 个人信息
 - 姓名：胡进林
 - 求职意向：AI 应用开发工程师
 - 经验：应届生
-- 现居：广东广州
+- 现居：河南郑州
 - 生日：2005.01.14
 
 ## 联系方式
@@ -29,11 +29,9 @@ tag: 个人信息
 - 搭了四类评测用例（能答 / 该拒答 / 恶意输入 / 闲聊）作为回归基线，改完代码先跑一遍确认效果不回退；参与 Docker 部署、接口调优，整理模块文档交接。
 
 ## 会什么
-- **语言与框架**：Python（主力）· JavaScript / React / AntD · FastAPI · Streamlit
-- **LLM 应用**：LangChain · LangGraph（状态图 + 持久化可恢复）· MCP · Agentic RAG · 多 Agent 编排 · Function Calling · Prompt Engineering
-- **检索与 RAG**：ChromaDB（cosine 距离，踩过 L2 坑）· Neo4j GraphRAG · bge 中文向量 · 混合检索（BM25 + 向量 + RRF k=60）· HyDE · 选型对比过 Milvus / PGVector
-- **数据与部署**：Docker · Git · Sqlite / MySQL（关系型 DB 原理 + Sqlite 无缝迁移）· Redis（缓存层选型）· vLLM（PagedAttention 推理加速）
-- **微调与评测**：PyTorch · PEFT / QLoRA 4-bit · RAGAS（Hit Rate / Faithfulness）· BLEU-4
+- **熟悉**：Python（主力）· LangGraph（状态图 + 持久化可恢复）· LangChain · FastAPI · Streamlit · ChromaDB（cosine 距离，踩过 L2 坑）· bge 中文向量 · PyTorch / PEFT / QLoRA · RAGAS（Hit Rate / Faithfulness）· Docker · Git
+- **LLM 应用**（有完整项目）：MCP · Agentic RAG · 多 Agent 编排 · Function Calling · 混合检索（BM25 + HyDE + RRF k=60）· Prompt Engineering
+- **了解**：JavaScript / React / AntD · Neo4j / GraphRAG · Sqlite / MySQL · vLLM（PagedAttention 推理加速）· Redis · Milvus / PGVector（选型对比）· BLEU-4
 
 ## 做过什么
 
